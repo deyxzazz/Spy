@@ -1,6 +1,8 @@
 # Spy
 <img width="1919" height="990" alt="изображение" src="https://github.com/user-attachments/assets/6ecbcced-053e-40fd-8564-9afea52943bf" />
 
+<img width="1919" height="986" alt="изображение" src="https://github.com/user-attachments/assets/83dba763-9983-4fb8-a183-5477d4f7c3e5" />
+
 <img width="1919" height="1015" alt="изображение" src="https://github.com/user-attachments/assets/c56581df-4783-4c30-a694-fdcb36770303" />
 
 <img width="1919" height="1020" alt="изображение" src="https://github.com/user-attachments/assets/0d974366-7aae-4219-b1b3-5581e18c5b5b" />
