@@ -1,14 +1,14 @@
 # Spy
-<img width="1919" height="960" alt="изображение" src="https://github.com/user-attachments/assets/80a46095-045f-46e1-a2be-3eb9e8de28bd" />
+<img width="1919" height="990" alt="изображение" src="https://github.com/user-attachments/assets/6ecbcced-053e-40fd-8564-9afea52943bf" />
 
-<img width="1919" height="987" alt="изображение" src="https://github.com/user-attachments/assets/5c8d821c-7225-48b3-ba27-23ddd2812c0c" />
+<img width="1919" height="1015" alt="изображение" src="https://github.com/user-attachments/assets/c56581df-4783-4c30-a694-fdcb36770303" />
 
-<img width="1919" height="986" alt="изображение" src="https://github.com/user-attachments/assets/1c5f8f81-0381-40ed-9bb6-60ccce4f28cd" />
+<img width="1919" height="1020" alt="изображение" src="https://github.com/user-attachments/assets/0d974366-7aae-4219-b1b3-5581e18c5b5b" />
 
 
 **Spy** is a lightweight desktop reverse-engineering, decompilation, and asset-editing utility for **Unity** games, built with **.NET 8** and **Avalonia UI**.
 
-It combines C# assembly decompilation/patching and Unity `.assets` inspection/replacement in a single cross-version interface supporting both legacy **Unity 3.x / 4.x** and modern **Unity 5 / 2017** titles.
+It combines C# assembly decompilation/patching and Unity `.assets` inspection/replacement in a single cross-version interface supporting both legacy **Unity 3.x / 4.x** and modern **Unity 2023+** titles.
 
 ---
 
