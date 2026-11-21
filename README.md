@@ -8,7 +8,7 @@
 
 **Spy** is a lightweight desktop reverse-engineering, decompilation, and asset-editing utility for **Unity** games, built with **.NET 8** and **Avalonia UI**.
 
-It combines C# assembly decompilation/patching and Unity `.assets` inspection/replacement in a single cross-version interface supporting both legacy **Unity 3.x / 4.x** and modern **Unity 2023+** titles.
+It combines C# assembly decompilation/patching and Unity `.assets` inspection/replacement in a single cross-version interface supporting both legacy **Unity 3.x / 4.x** and modern **Unity 2023+**.
 
 ---
 
