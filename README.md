@@ -1,56 +1,62 @@
 # ⚡ Spy (v13.0) — Unity Reverse Engineering & Asset Suite
-<img width="1280" height="675" alt="изображение" src="https://github.com/user-attachments/assets/32cb9f6c-7d57-4538-90d9-5674a034f64d" />
 
+[![License: GPL v3](https://shields.io)](LICENSE)
+[![.NET 9.0](https://shields.io)](https://microsoft.com)
+[![Avalonia UI](https://shields.io)](https://avaloniaui.net)
 
+![Spy Preview](<img width="1280" height="675" alt="изображение" src="https://github.com/user-attachments/assets/34f8c9ae-5ef7-4d4d-9596-2fa53cbeedcd" />
+)
 
-**Spy** is a lightweight desktop reverse-engineering, decompilation, and asset-editing utility for **Unity** games, built with **.NET 8** and **Avalonia UI**.
-
-It combines C# assembly decompilation/patching and Unity `.assets` inspection/replacement in a single cross-version interface supporting both legacy **Unity 3.x / 4.x** and modern **Unity 2023+**.
-
----
-
-## Features
-
-### 1. Assembly Decompiler & Live C# Editor
-- **Tree Browser & Search:** Quickly filter namespaces, classes, and methods inside `Assembly-CSharp.dll` and other managed assemblies.
-- **Syntax Highlighting & Search:** Built-in AvaloniaEdit viewer with line numbers, word wrap, C# language version selector (`C# 7.3` – `C# 12`), and `Ctrl+F` search.
-- **Live Method & Class Patching:** Edit any method or entire class in C# and compile changes directly back into the game's `.dll` via Roslyn & Mono.Cecil, or stub methods in one click.
-- **Code Export:** Export decompiled classes to `.cs` files.
-
-### 2. Unity Asset Inspector & Editor
-- **Universal Asset Support:** Reads standard Unity 5+ `.assets` / `mainData` / `globalgamemanagers.assets` via `AssetsTools.NET`, plus a built-in native parser for legacy **Unity 3.x / 4.x** asset archives.
-- **Texture2D Extraction & Replacement:** Export textures directly to `.png` (including `RGBA32`, `ARGB32`, `RGB24`, `Alpha8`, `DXT1`, and `DXT5` formats) and replace textures in-place from `.png` files.
-- **TextAsset & Raw Binary Editing:** Edit text assets in a built-in editor window, extract `.txt` / `.bin` dumps, or replace any asset from a file via the toolbar or right-click context menu.
-
-### 3. Safety & Workflow
-- **Automatic Backups:** Automatically creates `.bak` copies before modifying any game `.dll` or `.assets` file.
-- **Themes & Session State:** Supports System, Dark, and Light themes and remembers your last opened project, assembly, and method.
+**Spy** is a modern, lightweight desktop reverse-engineering, decompilation, and asset-editing utility for **Unity** games, built with **C# (.NET 9.0)** and **Avalonia UI**. It supports both **Mono** and **IL2CPP** titles (up to **metadata v31** / Unity 6).
 
 ---
 
-## Getting Started
+## ✨ What's New in v13.0
+- **Built-in IL2CPP Dumper (`AssetRipper.Cpp2IL.Core`)**:
+  - Native dumping of `GameAssembly.dll` + `global-metadata.dat` directly inside the app with full support for modern metadata versions (**v24 – v31+**).
+  - Generates **`DummyDll/*.dll`**, **`dump.cs`** (classes, fields with `FieldOffset`, methods with `RVA`), and **`script.json`** (for IDA Pro / Ghidra) with automatic loading straight into the class tree.
+  - Automatic Unity engine version detection from `UnityPlayer.dll` and metadata headers.
+- **Custom Frameless Window (Custom Window Chrome)**:
+  - Sleek IDE-style borderless title bar with adaptive styling across all **8 built-in color themes** (Dracula, Nord, Cyberpunk, Light, etc.).
+- **Live Bilingual UI (`RU` / `EN`)**:
+  - Instant switching between Russian and English right from the top bar without restarting the application.
+- **Persistent Workspace State (`AppState`)**:
+  - Automatically remembers your selected theme, UI language, window size/maximized state, and last opened game (`spy_state.json`).
+- **Interactive `Credits` Tab**:
+  - Animated icy blue-and-white gradient paired with an interactive 3D floating wireframe cube background.
 
-### Option 1: Download Prebuilt Binary (Windows x64)
-1. Go to the [**Releases**](https://github.com/deyxzazz/Spy/) page.
-2. Download **`Spy-win-x64.zip`**, extract it, and run **`Spy.exe`** (no .NET runtime installation required).
+---
 
-### Option 2: Build from Source
-Requirements: **.NET 8.0 SDK**
+## 🛠 Core Capabilities
+- **Mono & IL2CPP Code Inspector**: Browse assemblies, namespaces, types, fields, methods, and syntax-highlighted decompiled C# code (`ICSharpCode.Decompiler` + `AvaloniaEdit`).
+- **IL Patcher (`DllPatcher`)**: Modify IL instructions and save patched `.dll` assemblies directly.
+- **Unity Asset Viewer & Editor (`AssetsTools.NET`)**: Inspect `.assets`, `globalgamemanagers`, and asset bundles, edit properties, and export game resources.
+- **Project Exporter**: Export full project structures and decompiled assemblies in one click.
+
+---
+
+## 🚀 Quick Start (Release v13.0)
+1. Go to the **[Releases](https://github.com/deyxzazz/Spy/releases/latest)** page.
+2. Download **`Spy-v13.0-win-x64.zip`**.
+3. Extract the archive to any folder and run **`Spy.exe`**.
+
+---
+
+## 🧑‍💻 Building from Source
+Requirements: **.NET 9.0 SDK** (Windows x64).
 
 ```bash
-git clone https://github.com/deyxzazz/Spy/
+git clone https://github.com/deyxzazz/Spy
 cd Spy
-dotnet build -c Release
+dotnet publish -c Release -r win-x64 --self-contained true -p:PublishSingleFile=true -p:IncludeNativeLibrariesForSelfExtract=true -o ./Release_v13.0
 ```
 
 ---
 
-## Disclaimer
+## 📄 License
+Distributed under the **GNU General Public License v3.0 (GPL-3.0)**. See [`LICENSE`](LICENSE) for more information.
 
-This tool is intended for educational purposes, security research, and personal modding of games you own. Always respect copyright laws and game terms of service.
+---
 
-## License
-
-Distributed under the **MIT License**. See [`LICENSE`](LICENSE) for more information.
-
-lol
+## 👤 Author
+- **Developer:** [DEYXZAZZ](https://github.com/deyxzazz/Spy)
