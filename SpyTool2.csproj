@@ -3,8 +3,8 @@
     <RootNamespace>SpyTool2</RootNamespace>
 	  <AssemblyName>Spy</AssemblyName>
 	  <OutputType>WinExe</OutputType>
-    <TargetFramework>net8.0</TargetFramework>
-    <Nullable>enable</Nullable>
+	  <TargetFramework>net9.0</TargetFramework>
+	  <Nullable>enable</Nullable>
     <ApplicationManifest>app.manifest</ApplicationManifest>
     <ApplicationIcon>vibe beoe code.ico</ApplicationIcon>
   </PropertyGroup>
@@ -19,6 +19,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <PackageReference Include="AssetRipper.Cpp2IL.Core" Version="1.0.9" />
     <PackageReference Include="AssetsTools.NET" Version="3.0.5" />
     <PackageReference Include="AssetsTools.NET.Texture" Version="3.0.2" />
     <PackageReference Include="Avalonia" Version="12.1.6" />
