@@ -1,11 +1,11 @@
-# ⚡ Spy (v13.0) — Unity Reverse Engineering & Asset Suite
+# ⚡ Spy (v13.0) — Unity Reverse Engineering
 
-[![License: GPL v3](https://shields.io)](LICENSE)
-[![.NET 9.0](https://shields.io)](https://microsoft.com)
-[![Avalonia UI](https://shields.io)](https://avaloniaui.net)
+[![License: GPL v3](https://shields.io/badge/License-GPLv3-blue)](LICENSE)
+[![.NET 9.0](https://shields.io/badge/.NET-9.0-512BD4)](https://dotnet.microsoft.com)
+[![Avalonia UI](https://shields.io/badge/Avalonia_UI-11+-8B44AC)](https://avaloniaui.net)
 
-![Spy Preview](<img width="1280" height="675" alt="изображение" src="https://github.com/user-attachments/assets/34f8c9ae-5ef7-4d4d-9596-2fa53cbeedcd" />
-)
+<img width="1280" height="675" alt="изображение" src="https://github.com/user-attachments/assets/ad035ad5-7f7b-4756-9569-62072c36892c" />
+
 
 **Spy** is a modern, lightweight desktop reverse-engineering, decompilation, and asset-editing utility for **Unity** games, built with **C# (.NET 9.0)** and **Avalonia UI**. It supports both **Mono** and **IL2CPP** titles (up to **metadata v31** / Unity 6).
 
