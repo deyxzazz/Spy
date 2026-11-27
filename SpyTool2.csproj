@@ -6,13 +6,10 @@
 	  <TargetFramework>net9.0</TargetFramework>
 	  <Nullable>enable</Nullable>
     <ApplicationManifest>app.manifest</ApplicationManifest>
-    <ApplicationIcon>vibe beoe code.ico</ApplicationIcon>
+    <ApplicationIcon>SpyIcon.ico</ApplicationIcon>
   </PropertyGroup>
   <ItemGroup>
     <None Remove="Data\classdata.tpk" />
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="vibe beoe code.ico" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Data\classdata.tpk" />
@@ -36,5 +33,13 @@
     <PackageReference Include="dnlib" Version="4.5.0" />
     <PackageReference Include="ICSharpCode.Decompiler" Version="11.2.0.10050" />
     <PackageReference Include="Microsoft.CodeAnalysis.CSharp" Version="5.12.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <AvaloniaResource Remove="vibe beoe code.ico" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Include="SpyIcon.ico" />
   </ItemGroup>
 </Project>

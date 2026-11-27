@@ -68,7 +68,7 @@ public partial class MainWindow : Window
     private Button? _bExp;
     private Button? _bEdt;
     private Button? _bRep;
-    private Button? _bRip;
+    private TabControl? _mainTabs;
     private TabItem? _tabCode;
     private TabItem? _tabAssets;
     private TabItem? _tabExport;
@@ -100,7 +100,6 @@ public partial class MainWindow : Window
     private readonly ComboBox AssetFileBox = new() { Width = 300, PlaceholderText = Loc.T("main.asset_file.placeholder"), CornerRadius = new CornerRadius(6) };
     private readonly DataGrid AssetsGrid = new() { AutoGenerateColumns = false, IsReadOnly = true };
     private readonly TextBox AssetSearchBox = new() { Watermark = Loc.T("main.asset_search.watermark"), Width = 260, CornerRadius = new CornerRadius(6) };
-    private readonly TextBox RipOutputBox = new() { PlaceholderText = Loc.T("main.rip_output.placeholder"), CornerRadius = new CornerRadius(6) };
     private readonly TextBlock StatusText = new() { Text = Loc.T("status.ready") };
 
     private void SetStatus(string key, params object[] args)
@@ -203,14 +202,12 @@ public partial class MainWindow : Window
         if (!string.IsNullOrEmpty(AppState.Current.LastGamePath) && Directory.Exists(AppState.Current.LastGamePath))
             Scan(AppState.Current.LastGamePath);
     }
-
     private void UpdateLocalization()
     {
         GamePathBox.PlaceholderText = Loc.T("main.game_path.placeholder");
         TreeSearchBox.PlaceholderText = Loc.T("main.tree_search.placeholder");
         AssetFileBox.PlaceholderText = Loc.T("main.asset_file.placeholder");
         AssetSearchBox.Watermark = Loc.T("main.asset_search.watermark");
-        RipOutputBox.PlaceholderText = Loc.T("main.rip_output.placeholder");
 
         if (_minBtn != null) ToolTip.SetTip(_minBtn, Loc.T("window.minimize"));
         if (_maxRestoreBtn != null)
@@ -256,7 +253,6 @@ public partial class MainWindow : Window
         if (_colName != null) _colName.Header = Loc.T("main.grid.name");
         if (_colType != null) _colType.Header = Loc.T("main.grid.type");
         if (_colDetails != null) _colDetails.Header = Loc.T("main.grid.details");
-        if (_bRip != null) _bRip.Content = Loc.T("main.btn.run_ripper");
         if (_tabCode != null) _tabCode.Header = Loc.T("main.tab.code");
         if (_tabAssets != null) _tabAssets.Header = Loc.T("main.tab.assets");
         if (_tabExport != null) _tabExport.Header = Loc.T("main.tab.export");
@@ -307,7 +303,6 @@ public partial class MainWindow : Window
     {
         WindowState = WindowState == WindowState.Maximized ? WindowState.Normal : WindowState.Maximized;
     }
-
     private void ApplyTheme(int idx)
     {
         if (idx < 0) return;
@@ -349,6 +344,19 @@ public partial class MainWindow : Window
             _statusBarContainer.Background = barBrush;
             _statusBarContainer.BorderBrush = borderBrush;
         }
+    }
+
+    private void LoadDllsIntoCodeTab(IEnumerable<string> dlls)
+    {
+        foreach (var d in dlls)
+        {
+            if (!_customDlls.Contains(d, StringComparer.OrdinalIgnoreCase))
+                _customDlls.Add(d);
+            _decompilers.Remove(d);
+        }
+        RebuildTree(TreeSearchBox.Text ?? "");
+        if (_mainTabs != null && _tabCode != null)
+            _mainTabs.SelectedItem = _tabCode;
     }
 
     private void BuildUI()
@@ -437,7 +445,6 @@ public partial class MainWindow : Window
                 BeginMoveDrag(e);
             }
         };
-
         AssemblyTree.ItemTemplate = new FuncTreeDataTemplate<DnNode>((n, _) => new TextBlock { Text = n.Title, FontSize = 12.5 }, n => n.Children);
         AssemblyTree.SelectionChanged += (_, _) => {
             if (AssemblyTree.SelectedItem is not DnNode node) return;
@@ -505,7 +512,6 @@ public partial class MainWindow : Window
         CodeViewerBox.Margin = new Thickness(10, 0, 0, 0);
         var tab1 = new DockPanel(); DockPanel.SetDock(codeBar, Dock.Top); DockPanel.SetDock(leftPanel, Dock.Left);
         tab1.Children.Add(codeBar); tab1.Children.Add(leftPanel); tab1.Children.Add(new Grid { Children = { CodeViewerBox } });
-
         AssetFileBox.SelectionChanged += (_, _) => { if (AssetFileBox.SelectedItem != null) OnLoadAssetsClick(null, new RoutedEventArgs()); };
         _bLoad = new Button { Content = Loc.T("main.btn.refresh"), CornerRadius = new CornerRadius(6) };
         _bLoad.Click += OnLoadAssetsClick;
@@ -530,22 +536,29 @@ public partial class MainWindow : Window
         assetBar.Children.Add(AssetFileBox); assetBar.Children.Add(AssetSearchBox); assetBar.Children.Add(_bLoad); assetBar.Children.Add(_bExp); assetBar.Children.Add(_bEdt); assetBar.Children.Add(_bRep); assetBar.Children.Add(_bNextMod);
         var tab2 = new DockPanel(); DockPanel.SetDock(assetBar, Dock.Top); tab2.Children.Add(assetBar); tab2.Children.Add(AssetsGrid);
 
-        _bRip = new Button { Content = Loc.T("main.btn.run_ripper"), CornerRadius = new CornerRadius(6) };
-        _bRip.Click += OnRunRipperClick;
-        var tab3 = new StackPanel { Spacing = 10, Margin = new Thickness(12) }; tab3.Children.Add(RipOutputBox); tab3.Children.Add(_bRip);
+        Func<string> getUnityVer = () => EngineInfoText.Text?.Split('•').FirstOrDefault()?.Replace("Unity", "").Trim() ?? "";
+        Action<string> setStatusAction = s => { _statusKey = ""; StatusText.Text = s; };
 
         _tabCode = new TabItem { Header = Loc.T("main.tab.code"), Content = tab1 };
         _tabAssets = new TabItem { Header = Loc.T("main.tab.assets"), Content = tab2 };
-        _tabExport = new TabItem { Header = Loc.T("main.tab.export"), Content = tab3 };
-        _tabDumper = new TabItem { Header = Loc.T("main.tab.il2cpp_dumper"), Content = Cpp2ILTab.Build(this, () => _dataDir, () => EngineInfoText.Text?.Split('•').FirstOrDefault()?.Replace("Unity", "").Trim() ?? "", dlls => { foreach (var d in dlls) if (!_customDlls.Contains(d, StringComparer.OrdinalIgnoreCase)) _customDlls.Add(d); RebuildTree(TreeSearchBox.Text ?? ""); }, s => { _statusKey = ""; StatusText.Text = s; }) };
-        _tabAbout = new TabItem { Header = Loc.T("main.tab.about"), Content = CreditsTab.Build(this, s => { _statusKey = ""; StatusText.Text = s; }) };
+        _tabExport = new TabItem
+        {
+            Header = Loc.T("main.tab.export"),
+            Content = ProjectExporterTab.Build(this, () => _dataDir, getUnityVer, LoadDllsIntoCodeTab, setStatusAction)
+        };
+        _tabDumper = new TabItem
+        {
+            Header = Loc.T("main.tab.il2cpp_dumper"),
+            Content = Cpp2ILTab.Build(this, () => _dataDir, getUnityVer, LoadDllsIntoCodeTab, setStatusAction)
+        };
+        _tabAbout = new TabItem { Header = Loc.T("main.tab.about"), Content = CreditsTab.Build(this, setStatusAction) };
 
-        var tabs = new TabControl { Margin = new Thickness(12, 6, 12, 8) };
-        tabs.Items.Add(_tabCode);
-        tabs.Items.Add(_tabAssets);
-        tabs.Items.Add(_tabExport);
-        tabs.Items.Add(_tabDumper);
-        tabs.Items.Add(_tabAbout);
+        _mainTabs = new TabControl { Margin = new Thickness(12, 6, 12, 8) };
+        _mainTabs.Items.Add(_tabCode);
+        _mainTabs.Items.Add(_tabAssets);
+        _mainTabs.Items.Add(_tabExport);
+        _mainTabs.Items.Add(_tabDumper);
+        _mainTabs.Items.Add(_tabAbout);
 
         _statusBarContainer = new Border
         {
@@ -558,7 +571,7 @@ public partial class MainWindow : Window
         DockPanel.SetDock(_statusBarContainer, Dock.Bottom);
         root.Children.Add(_topBarContainer);
         root.Children.Add(_statusBarContainer);
-        root.Children.Add(tabs);
+        root.Children.Add(_mainTabs);
         _windowFrameBorder = new Border
         {
             BorderThickness = new Thickness(1),
@@ -566,7 +579,6 @@ public partial class MainWindow : Window
         };
         Content = _windowFrameBorder;
     }
-
     private static System.Reflection.Metadata.EntityHandle nodeOrMemberToken(DnNode n) => n.Member!.MetadataToken;
 
     private void ResetProject(bool clear = true)
@@ -644,7 +656,6 @@ public partial class MainWindow : Window
         }
         return dec;
     }
-
     private void RebuildTree(string filter)
     {
         var dllSet = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
@@ -741,7 +752,6 @@ public partial class MainWindow : Window
             StatusText.Text = lastStatus;
         }
     }
-
     private async void OnBrowseClick(object? s, RoutedEventArgs e)
     {
         var fs = await StorageProvider.OpenFolderPickerAsync(new FolderPickerOpenOptions
@@ -853,13 +863,5 @@ public partial class MainWindow : Window
             }
             catch (Exception ex) { SetStatus("status.read_error", realFile, ex.Message); }
         }
-    }
-
-    private void OnRunRipperClick(object? s, RoutedEventArgs e)
-    {
-        string exe = Path.Combine(AppContext.BaseDirectory, "Tools", "AssetRipper", "AssetRipper.exe");
-        if (!File.Exists(exe) || string.IsNullOrEmpty(_dataDir)) { SetStatus("status.ripper_missing", Path.GetDirectoryName(exe) ?? ""); return; }
-        string outD = string.IsNullOrWhiteSpace(RipOutputBox.Text) ? Path.Combine(Path.GetDirectoryName(_dataDir)!, "Ripped") : RipOutputBox.Text;
-        Process.Start(new ProcessStartInfo { FileName = exe, Arguments = $"\"{_dataDir}\" -o \"{outD}\"", UseShellExecute = true });
     }
 }
